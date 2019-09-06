@@ -1,5 +1,6 @@
 <template>
   <div class="goods">
+
     <div class="menu-wrapper" >
       <ul>
         <li v-for="(item,i) in goods" :key="i" class="menu-item">
@@ -9,6 +10,7 @@
         </li>
       </ul>
     </div>
+
     <!-- 要滚动的地方 -->
     <div class="foods-wrapper scroll-list-wrap" >
       <cube-index-list
@@ -32,6 +34,9 @@
                   <span class="now">￥ {{ food.price }} </span>
                   <span class="old" v-show="food.oldPrice">￥ {{ food.oldPrice }} </span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
@@ -39,10 +44,13 @@
       </ul>
      </cube-index-list>
     </div>
+    <shopcat :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcat>
   </div>
 </template>
 
 <script>
+import shopcat from '../shopcat/shopcat.vue'
+import cartcontrol from '../cartcontrol/cartcontrol.vue'
 export default {
   data () {
     return {
@@ -59,6 +67,25 @@ export default {
     const res = await this.$axios.get('/api/goods')
     console.log(res)
     this.goods = res.data.data
+  },
+  methods: {
+  },
+  components: {
+    shopcat,
+    cartcontrol
+  },
+  computed: {
+    selectFoods () {
+      let foods = []
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            foods.push(food)
+          }
+        })
+      })
+      return foods
+    }
   }
 }
 </script>
@@ -158,4 +185,8 @@ export default {
             text-decoration:line-through
             font-size:10px
             color:rgb(147,153,159)
+        .cartcontrol-wrapper
+          position:absolute
+          right:0
+          bottom:12px
 </style>

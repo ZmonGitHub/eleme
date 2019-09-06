@@ -12,7 +12,7 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <router-view></router-view>
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 
@@ -33,6 +33,7 @@ export default {
     elemHeader
   }
 }
+
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
 @import "./common/stylus/mixin.styl"
